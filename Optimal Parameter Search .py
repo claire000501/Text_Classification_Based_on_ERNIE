@@ -72,7 +72,7 @@ for temp in temperature_values:
                 print(f"Extracted keyword: {keyword}")
             
             # Calculate accuracy for the current combination
-            accuracy = calculate_accuracy(predictions, df['text classification'])  # "text classification" column
+            accuracy = calculate_accuracy(predictions, df['trust classification'])  # "trust classification" column
             print(f"Temperature: {temp}, Top_p: {top_p}, Penalty_score: {penalty_score}, Accuracy: {accuracy}")
             
             if accuracy > best_accuracy:
