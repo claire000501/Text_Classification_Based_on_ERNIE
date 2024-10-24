@@ -8,7 +8,7 @@ os.environ["QIANFAN_ACCESS_KEY"] = "xx"
 os.environ["QIANFAN_SECRET_KEY"] = "xx"
 
 # Load Excel file
-file_path = '/Users/clairewang/Desktop/trust_or_not/标注.xlsx'
+file_path = '/Desktop/sample.xlsx'
 df = pd.read_excel(file_path)
 
 # Initialize the model
@@ -20,7 +20,7 @@ def calculate_accuracy(predictions, targets):
 
 # Define the function to generate responses
 def generate_response(text, temperature, top_p, penalty_score):
-    prompt_text = f"Forget all previous instructions. You are now a finance, management, and accounting expert. I will provide a text where an investor asks about a listed company. You need to answer whether the text implies that the investor trusts or does not trust this company. Choose only one from 'Trust', 'Distrust', or 'Unknown' without providing any additional response: {text}"
+    prompt_text = f"忘掉所有之前的指令。你现在是一位金融、管理与会计专家。我会给出一个投资者对上市公司comment的文本，你需要回答这个comment文本是暗示投资者trust还是不trust这家公司。请在“trust”、“不trust”、“unknown”中只选择一个选项，并且不要提供任何额外的回答：{text}"
     try:
         response = chat_comp.do(
             endpoint="ernie-speed-128k",
@@ -45,14 +45,14 @@ def generate_response(text, temperature, top_p, penalty_score):
 
 # Define the function to extract keywords
 def extract_keyword(response):
-    if response.startswith("信任"):  # "Trust"
-        return "信任"  # "Trust"
-    elif response.startswith("不信任"):  # "Distrust"
-        return "不信任"  # "Distrust"
-    elif response.startswith("未知"):  # "Unknown"
-        return "未知"  # "Unknown"
+    if response.startswith("trust"):  
+        return "trust" 
+    elif response.startswith("不trust"):  
+        return "不trust" 
+    elif response.startswith("unknown"):  
+        return "unknown" 
     else:
-        return "未知"  # Return "Unknown" by default if no match is found
+        return "unknown"  
 
 # Try different combinations of temperature, top_p, and penalty_score
 best_combination = None
@@ -65,14 +65,14 @@ for temp in temperature_values:
     for top_p in top_p_values:
         for penalty_score in penalty_score_values:
             predictions = []
-            for text in df['提问']:  # "Question" column from the dataframe
+            for text in df['comment']:  # "comment" column from the dataframe
                 response = generate_response(text, temp, top_p, penalty_score)
                 keyword = extract_keyword(response)
                 predictions.append(keyword)
                 print(f"Extracted keyword: {keyword}")
             
             # Calculate accuracy for the current combination
-            accuracy = calculate_accuracy(predictions, df['信任程度'])  # "Trust level" column
+            accuracy = calculate_accuracy(predictions, df['text classification'])  # "text classification" column
             print(f"Temperature: {temp}, Top_p: {top_p}, Penalty_score: {penalty_score}, Accuracy: {accuracy}")
             
             if accuracy > best_accuracy:
