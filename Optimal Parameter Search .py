@@ -20,7 +20,7 @@ def calculate_accuracy(predictions, targets):
 
 # Define the function to generate responses
 def generate_response(text, temperature, top_p, penalty_score):
-    prompt_text = f"忘掉所有之前的指令。你现在是一位金融、管理与会计专家。我会给出一个投资者对上市公司comment的文本，你需要回答这个comment文本是暗示投资者trust还是不trust这家公司。请在“trust”、“不trust”、“unknown”中只选择一个选项，并且不要提供任何额外的回答：{text}"
+    prompt_text = f"Forget all previous instructions. You are now a finance, management, and accounting expert. I will provide a text where an investor asks about a listed company. You need to answer whether the text implies that the investor trusts or does not trust this company. Choose only one from 'Trust', 'Distrust', or 'Unknown' without providing any additional response: {text}"
     try:
         response = chat_comp.do(
             endpoint="ernie-speed-128k",
@@ -45,14 +45,14 @@ def generate_response(text, temperature, top_p, penalty_score):
 
 # Define the function to extract keywords
 def extract_keyword(response):
-    if response.startswith("trust"):  
-        return "trust" 
-    elif response.startswith("不trust"):  
-        return "不trust" 
-    elif response.startswith("unknown"):  
-        return "unknown" 
+    if response.startswith("Trust"):  
+        return "Trust" 
+    elif response.startswith("Distrust"):  
+        return "Distrust" 
+    elif response.startswith("UnKnown"):  
+        return "UnKnown" 
     else:
-        return "unknown"  
+        return "UnKnown"  
 
 # Try different combinations of temperature, top_p, and penalty_score
 best_combination = None
